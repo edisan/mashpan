@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:json="http://www.mulesoft.org/schema/mule/json" xmlns:tracking="http://www.mulesoft.org/schema/mule/ee/tracking" xmlns:twitter="http://www.mulesoft.org/schema/mule/twitter" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:ajax="http://www.mulesoft.org/schema/mule/ajax" xmlns:https="http://www.mulesoft.org/schema/mule/https" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:spring="http://www.springframework.org/schema/beans" version="EE-3.4.1"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ajax http://www.mulesoft.org/schema/mule/ajax/current/mule-ajax.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/https http://www.mulesoft.org/schema/mule/https/current/mule-https.xsd
+http://www.mulesoft.org/schema/mule/twitter http://www.mulesoft.org/schema/mule/twitter/2.4/mule-twitter.xsd
+http://www.mulesoft.org/schema/mule/json http://www.mulesoft.org/schema/mule/json/current/mule-json.xsd
+http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/mule/ee/tracking/current/mule-tracking-ee.xsd">
+    <twitter:config name="Twitter" accessKey="2359000566-8p66LBzfhuIE1gLmEprFlB9K32VKGTiohrRqN1Q" accessSecret="jCkPhKmL5epFxo7AsTtc0v4I5eplHyIw9SvQyfphXglVT" consumerKey="Fz6P0e9m6qQaOOnvUFOpiQ" consumerSecret="hZx7UEOLCD8jtG1lCrXd6qBaCqWexgiANzqovvAvKdI" doc:name="Twitter">
+        <twitter:connection-pooling-profile initialisationPolicy="INITIALISE_ONE" exhaustedAction="WHEN_EXHAUSTED_GROW"/>
+    </twitter:config>
+    <ajax:connector name="Ajax" serverUrl="http://127.0.0.1:8090/twitter" resourceBase="docroot" jsonCommented="true" doc:name="Ajax"/>
+    <flow name="twitterFlow1" doc:name="twitterFlow1">
+        <ajax:inbound-endpoint channel="/services/tweet" responseTimeout="10000" doc:name="Ajax" connector-ref="Ajax"/>
+        <set-variable variableName="lng" value="#[message.payload['lng']]" doc:name="Variable"/>
+        <set-variable variableName="lat" value="#[message.payload['lat']]" doc:name="Variable"/>
+        <set-variable variableName="phrase" value="#[message.payload['phrase']]" doc:name="Variable"/>
+        <logger message="latitude=#[lat], longitude=#[lng], phrase=#[phrase]" level="INFO" doc:name="Logger"/>
+        <set-variable variableName="geocode" value="#[lat],#[lng]" doc:name="Variable"/>
+        <twitter:search config-ref="Twitter" query="#[phrase]" geocode="#[geocode]" radius="1" resultType="mixed" accessKey="2359000566-8p66LBzfhuIE1gLmEprFlB9K32VKGTiohrRqN1Q" accessSecret="jCkPhKmL5epFxo7AsTtc0v4I5eplHyIw9SvQyfphXglVT" doc:name="Twitter"/>
+        <json:object-to-json-transformer doc:name="Object to JSON"/>
+        <echo-component doc:name="Echo"/>
+    </flow>
+</mule>

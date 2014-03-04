@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:scripting="http://www.mulesoft.org/schema/mule/scripting" xmlns:data-mapper="http://www.mulesoft.org/schema/mule/ee/data-mapper" xmlns:json="http://www.mulesoft.org/schema/mule/json" xmlns:ajax="http://www.mulesoft.org/schema/mule/ajax" xmlns:twitter="http://www.mulesoft.org/schema/mule/twitter" xmlns:https="http://www.mulesoft.org/schema/mule/https" xmlns:tracking="http://www.mulesoft.org/schema/mule/ee/tracking" xmlns:mulexml="http://www.mulesoft.org/schema/mule/xml" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:spring="http://www.springframework.org/schema/beans" version="EE-3.4.1"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ajax http://www.mulesoft.org/schema/mule/ajax/current/mule-ajax.xsd
+http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/mule/ee/tracking/current/mule-tracking-ee.xsd
+http://www.mulesoft.org/schema/mule/https http://www.mulesoft.org/schema/mule/https/current/mule-https.xsd
+http://www.mulesoft.org/schema/mule/json http://www.mulesoft.org/schema/mule/json/current/mule-json.xsd
+http://www.mulesoft.org/schema/mule/xml http://www.mulesoft.org/schema/mule/xml/current/mule-xml.xsd
+http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mule/scripting/current/mule-scripting.xsd
+http://www.mulesoft.org/schema/mule/twitter http://www.mulesoft.org/schema/mule/twitter/2.4/mule-twitter.xsd
+http://www.mulesoft.org/schema/mule/ee/data-mapper http://www.mulesoft.org/schema/mule/ee/data-mapper/current/mule-data-mapper.xsd">
+    <ajax:connector name="Ajax" serverUrl="http://127.0.0.1:8090/mashpan" resourceBase="docroot" jsonCommented="true" doc:name="Ajax"/>
+    <twitter:config name="Twitter" accessKey="2359000566-8p66LBzfhuIE1gLmEprFlB9K32VKGTiohrRqN1Q" accessSecret="jCkPhKmL5epFxo7AsTtc0v4I5eplHyIw9SvQyfphXglVT" consumerKey="Fz6P0e9m6qQaOOnvUFOpiQ" consumerSecret="hZx7UEOLCD8jtG1lCrXd6qBaCqWexgiANzqovvAvKdI" doc:name="Twitter">
+        <twitter:connection-pooling-profile initialisationPolicy="INITIALISE_ONE" exhaustedAction="WHEN_EXHAUSTED_GROW"/>
+    </twitter:config>
+    <flow name="mashpanFlow1" doc:name="mashpanFlow1">
+        <ajax:inbound-endpoint channel="/services/mashpan" responseTimeout="10000" connector-ref="Ajax" doc:name="Ajax"/>
+        <set-variable variableName="lng" value="#[message.payload['lng']]" doc:name="Lng_Variable"/>
+        <set-variable variableName="lat" value="#[message.payload['lat']]" doc:name="Lat_Variable"/>
+        <set-variable variableName="phrase" value="#[message.payload['phrase']]" doc:name="Phrase_Variable"/>
+        <logger message="latitude=#[lat], longitude=#[lng], phrase=#[phrase]" level="INFO" doc:name="Logger"/>
+        <https:outbound-endpoint exchange-pattern="request-response" host="api.foursquare.com" port="443" path="v2/venues/explore?ll=#[lat],#[lng]&amp;oauth_token=RW4ELL4UT0Q03PKLA24VB1HTBSNTJUYYTEUG2XWZ2PIZXQ0D&amp;v=20140226&amp;query=#[phrase]" method="GET" doc:name="Foursquare_HTTP"/>
+        <logger message="#[message.payload]" level="INFO" doc:name="Logger"/>
+        <json:json-to-object-transformer returnClass="java.util.Map" doc:name="JSON to Object"/>
+        <set-variable variableName="items" value="#[message.payload.response.groups[0].items]" doc:name="Variable"/>
+        <set-variable variableName="venueList" value="{&quot;venues&quot;:[" doc:name="Variable"/>
+        <foreach collection="#[items]" rootMessageVariableName="item" doc:name="For Each">
+            <processor-chain doc:name="Processor Chain">
+                <set-variable variableName="venueName" value="#[items[counter-1].venue.name]" doc:name="VenuName_Variable"/>
+                <set-variable variableName="venueLat" value="#[items[counter-1].venue.location.lat]" doc:name="Lat_Variable"/>
+                <set-variable variableName="venueLng" value="#[items[counter-1].venue.location.lng]" doc:name="Lng_Variable"/>
+                <set-variable variableName="venueList" value="#[venueList + &quot;{\&quot;name\&quot;:&quot; + &quot;\&quot;&quot; + venueName + &quot;\&quot;,\&quot;location\&quot;:{\&quot;lat\&quot;:&quot; + venueLat + &quot;,\&quot;lng\&quot;:&quot; + venueLng + &quot;}&quot;]" doc:name="Variable"/>
+                <set-variable variableName="venueList" value="#[venueList + &quot;,\&quot;tweets\&quot;:[&quot;]" doc:name="Variable"/>
+                <set-variable variableName="geocode" value="#[venueLat],#[venueLng]" doc:name="Geo_Variable"/>
+                <twitter:search config-ref="Twitter" query="&quot;#[venueName]&quot;" geocode="#[geocode]" radius="2" resultType="mixed" accessKey="2359000566-8p66LBzfhuIE1gLmEprFlB9K32VKGTiohrRqN1Q" accessSecret="jCkPhKmL5epFxo7AsTtc0v4I5eplHyIw9SvQyfphXglVT" doc:name="Twitter"/>
+                <set-variable variableName="tweets" value="#[message.payload.tweets]" doc:name="Variable"/>
+                <foreach collection="#[tweets]" doc:name="For Each">
+                    <set-variable variableName="venueList" value="#[venueList + &quot;{\&quot;id\&quot;:&quot; + tweets[counter-1].id + &quot;,\&quot;text\&quot;:&quot; + &quot;\&quot;&quot; + tweets[counter-1].text + &quot;\&quot;},&quot;]" doc:name="Variable"/>
+                    <logger message="foreach=#[venueList]" level="INFO" doc:name="Logger"/>
+                </foreach>
+                <set-variable variableName="venueList" value="#[venueList + &quot;{\&quot;id\&quot;:0&quot; + &quot;,\&quot;text\&quot;:\&quot;dummy\&quot;&quot; + &quot;}]&quot;]" doc:name="Variable"/>
+                <set-variable variableName="venueList" value="#[venueList + &quot;},&quot;]" doc:name="Variable"/>
+                <logger message="Foreachtweet:#[venueList]" level="INFO" doc:name="Logger"/>
+            </processor-chain>
+        </foreach>
+        <set-variable variableName="venueList" value="#[venueList + &quot;{\&quot;name\&quot;:\&quot;dummy\&quot;&quot; + &quot;,\&quot;location\&quot;:{\&quot;lat\&quot;:0&quot; + &quot;,\&quot;lng\&quot;:0}}]}&quot;]" doc:name="Variable"/>
+        <logger message="Venues=#[venueList]" level="INFO" doc:name="Logger"/>
+        <set-payload value="#[venueList]" doc:name="Set Payload"/>
+        <json:object-to-json-transformer doc:name="Object to JSON"/>
+        <echo-component doc:name="Echo"/>
+    </flow>
+</mule>

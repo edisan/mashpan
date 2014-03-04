@@ -1,0 +1,411 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<mule-configuration xmlns="http://www.mulesoft.com/tooling/messageflow" name="mashpan">
+    <global-element name="Ajax" type="org.mule.tooling.ui.modules.core.global.ajaxConnector" entity-id="Ajax#1">
+        <properties>
+            <property name="maxInterval"/>
+            <property name="jsonCommented" value="true"/>
+            <property name="interval"/>
+            <property name="logLevel"/>
+            <property name="name" value="Ajax"/>
+            <property name="refsThreshold"/>
+            <property name="disableReplyTo"/>
+            <property name="multiFrameInterval"/>
+            <property name="resourceBase" value="docroot"/>
+            <property name="auxiliary;index" value="1"/>
+            <property name="timeout"/>
+            <property name="serverUrl" value="http://127.0.0.1:8090/mashpan"/>
+        </properties>
+    </global-element>
+    <global-element name="Twitter" type="http://www.mulesoft.org/schema/mule/twitter/config" entity-id="Twitter#1">
+        <properties>
+            <property name="proxyUsername"/>
+            <property name="useSSL"/>
+            <property name="consumerKey" value="Fz6P0e9m6qQaOOnvUFOpiQ"/>
+            <property name="accessKey" value="2359000566-8p66LBzfhuIE1gLmEprFlB9K32VKGTiohrRqN1Q"/>
+            <property name="proxyHost"/>
+            <property name="name" value="Twitter"/>
+            <property name="accessSecret" value="jCkPhKmL5epFxo7AsTtc0v4I5eplHyIw9SvQyfphXglVT"/>
+            <property name="proxyPort"/>
+            <property name="auxiliary;index" value="2"/>
+            <property name="proxyPassword"/>
+            <property name="consumerSecret" value="hZx7UEOLCD8jtG1lCrXd6qBaCqWexgiANzqovvAvKdI"/>
+            <property-collection name="@http://www.mulesoft.org/schema/mule/twitter/connection-pooling-profile;0">
+                <property name="exhaustedAction" value="WHEN_EXHAUSTED_GROW"/>
+                <property name="isProcessed$$$$ " value="true"/>
+                <property name="auxiliary;index" value="3"/>
+                <property name="auxiliary;wrapIn" value="3"/>
+                <property name="initialisationPolicy" value="INITIALISE_ONE"/>
+            </property-collection>
+        </properties>
+    </global-element>
+    <flow SubFlow="false" name="mashpanFlow1" type="http://www.mulesoft.org/schema/mule/core/flow" entity-id="8e242f78-63e4-456f-89a1-e42d3abf0271">
+        <properties>
+            <property name="processingStrategy2" value=""/>
+            <property name="initialState" value=""/>
+            <property name="auxiliary;erased;initialState" value="true"/>
+            <property name="bussinessEventsLabel" value=""/>
+            <property name="tracking:enable-default-events" value="false"/>
+            <property name="auxiliary;erased;processingStrategy2" value="true"/>
+            <property name="auxiliary;index" value="4"/>
+            <property name="updated"/>
+            <property-collection name="@http://www.mulesoft.org/schema/mule/ee/tracking/transaction;771325112">
+                <property name="id" value=""/>
+                <property name="isProcessed$$$$ " value="true"/>
+            </property-collection>
+        </properties>
+        <description></description>
+        <lane hadOnlyOneElement="false" index="0" isChoiceOtherwiseLane="false" entity-id="compartment-lane#1">
+            <graphicalData x="0" y="0" width="0" height="0"/>
+            <endpoint direction="Inbound" message-exchange-pattern="OneWay" name="Ajax" type="org.mule.tooling.ui.modules.core.ajax.AJAX" entity-id="Ajax#2">
+                <graphicalData x="21" y="168" width="68" height="67"/>
+                <properties>
+                    <property name="businessEventsLabel"/>
+                    <property name="messageCacheSize"/>
+                    <property name="disableTransportTransformer"/>
+                    <property name="exchange-pattern" value="one-way"/>
+                    <property name="tracking:enable-default-events"/>
+                    <property name="ref"/>
+                    <property name="transformer-refs"/>
+                    <property name="cacheMessages"/>
+                    <property name="address"/>
+                    <property name="encoding"/>
+                    <property name="channel" value="/services/mashpan"/>
+                    <property name="auxiliary;index" value="5"/>
+                    <property name="responseTimeout" value="10000"/>
+                    <property name="mimeType"/>
+                    <property name="connector-ref" value="Ajax"/>
+                </properties>
+            </endpoint>
+            <pattern name="Lng_Variable" type="http://www.mulesoft.org/schema/mule/core/variable-transformer" entity-id="Variable#1">
+                <graphicalData x="149" y="168" width="83" height="67"/>
+                <properties>
+                    <property name="variableName" value="lng"/>
+                    <property name="value" value="#[message.payload['lng']]"/>
+                    <property name="org.mule.tooling.ui.modules.core.widgets.meta.ModeAttribute" value="http://www.mulesoft.org/schema/mule/core/set-variable"/>
+                    <property name="auxiliary;index" value="6"/>
+                </properties>
+            </pattern>
+            <pattern name="Lat_Variable" type="http://www.mulesoft.org/schema/mule/core/variable-transformer" entity-id="Variable#2">
+                <graphicalData x="292" y="168" width="79" height="67"/>
+                <properties>
+                    <property name="variableName" value="lat"/>
+                    <property name="value" value="#[message.payload['lat']]"/>
+                    <property name="org.mule.tooling.ui.modules.core.widgets.meta.ModeAttribute" value="http://www.mulesoft.org/schema/mule/core/set-variable"/>
+                    <property name="auxiliary;index" value="7"/>
+                </properties>
+            </pattern>
+            <pattern name="Phrase_Variable" type="http://www.mulesoft.org/schema/mule/core/variable-transformer" entity-id="Variable#3">
+                <graphicalData x="431" y="168" width="98" height="67"/>
+                <properties>
+                    <property name="variableName" value="phrase"/>
+                    <property name="value" value="#[message.payload['phrase']]"/>
+                    <property name="org.mule.tooling.ui.modules.core.widgets.meta.ModeAttribute" value="http://www.mulesoft.org/schema/mule/core/set-variable"/>
+                    <property name="auxiliary;index" value="8"/>
+                </properties>
+            </pattern>
+            <pattern name="Logger" type="http://www.mulesoft.org/schema/mule/core/logger" entity-id="Logger#1">
+                <graphicalData x="589" y="168" width="68" height="67"/>
+                <properties>
+                    <property name="message" value="latitude=#[lat], longitude=#[lng], phrase=#[phrase]"/>
+                    <property name="category"/>
+                    <property name="level" value="INFO"/>
+                    <property name="auxiliary;index" value="9"/>
+                </properties>
+            </pattern>
+            <endpoint direction="Outbound" message-exchange-pattern="RequestResponse" name="Foursquare_HTTP" type="http://www.mulesoft.org/schema/mule/http/endpoint" entity-id="HTTP#1">
+                <graphicalData x="717" y="168" width="108" height="67"/>
+                <properties>
+                    <property name="port" value="443"/>
+                    <property name="contentType"/>
+                    <property name="password"/>
+                    <property name="tracking:enable-default-events"/>
+                    <property name="exchange-pattern" value="request-response"/>
+                    <property name="encoding"/>
+                    <property name="path" value="v2/venues/explore?ll=#[lat],#[lng]&amp;oauth_token=RW4ELL4UT0Q03PKLA24VB1HTBSNTJUYYTEUG2XWZ2PIZXQ0D&amp;v=20140226&amp;query=#[phrase]"/>
+                    <property name="responseTransformer-refs"/>
+                    <property name="connector-ref-outbound"/>
+                    <property name="mimeType"/>
+                    <property name="responseTimeout"/>
+                    <property name="auxiliary;index" value="10"/>
+                    <property name="host" value="api.foursquare.com"/>
+                    <property name="businessEventsLabel"/>
+                    <property name="followRedirects"/>
+                    <property name="org.mule.tooling.ui.modules.core.widgets.meta.ModeAttribute" value="http://www.mulesoft.org/schema/mule/https/endpoint"/>
+                    <property name="keep-alive"/>
+                    <property name="disableTransportTransformer"/>
+                    <property name="ref"/>
+                    <property name="httpLabel"/>
+                    <property name="transformer-refs"/>
+                    <property name="address"/>
+                    <property name="method" value="GET"/>
+                    <property name="user"/>
+                    <property name="connector-ref"/>
+                </properties>
+            </endpoint>
+            <pattern name="Logger" type="http://www.mulesoft.org/schema/mule/core/logger" entity-id="Logger#2">
+                <graphicalData x="885" y="168" width="68" height="67"/>
+                <properties>
+                    <property name="message" value="#[message.payload]"/>
+                    <property name="category"/>
+                    <property name="level" value="INFO"/>
+                    <property name="auxiliary;index" value="11"/>
+                </properties>
+            </pattern>
+            <pattern name="JSON to Object" type="http://www.mulesoft.org/schema/mule/json/json-to-object-transformer" entity-id="JSON to Object#1">
+                <graphicalData x="1013" y="168" width="93" height="67"/>
+                <properties>
+                    <property name="returnClass" value="java.util.Map"/>
+                    <property name="ignoreBadInput"/>
+                    <property name="encoding"/>
+                    <property name="mapper-ref"/>
+                    <property name="auxiliary;index" value="12"/>
+                    <property name="mimeType"/>
+                </properties>
+            </pattern>
+            <pattern name="Variable" type="http://www.mulesoft.org/schema/mule/core/variable-transformer" entity-id="Variable#4">
+                <graphicalData x="1166" y="168" width="68" height="67"/>
+                <properties>
+                    <property name="variableName" value="items"/>
+                    <property name="value" value="#[message.payload.response.groups[0].items]"/>
+                    <property name="org.mule.tooling.ui.modules.core.widgets.meta.ModeAttribute" value="http://www.mulesoft.org/schema/mule/core/set-variable"/>
+                    <property name="auxiliary;index" value="13"/>
+                </properties>
+                <description></description>
+            </pattern>
+            <pattern name="Variable" type="http://www.mulesoft.org/schema/mule/core/variable-transformer" entity-id="Variable#5">
+                <graphicalData x="1294" y="168" width="68" height="67"/>
+                <properties>
+                    <property name="variableName" value="venueList"/>
+                    <property name="updated"/>
+                    <property name="value" value="{&quot;venues&quot;:["/>
+                    <property name="org.mule.tooling.ui.modules.core.widgets.meta.ModeAttribute" value="http://www.mulesoft.org/schema/mule/core/set-variable"/>
+                    <property name="auxiliary;index" value="14"/>
+                </properties>
+                <description></description>
+            </pattern>
+            <scope name="For Each" type="http://www.mulesoft.org/schema/mule/core/foreach" entity-id="For Each#1">
+                <graphicalData x="1422" y="115" width="1783" height="173"/>
+                <properties>
+                    <property name="counterVariableName"/>
+                    <property name="rootMessageVariableName" value="item"/>
+                    <property name="batchSize"/>
+                    <property name="collection" value="#[items]"/>
+                    <property name="auxiliary;index" value="15"/>
+                </properties>
+                <compartment entity-id="compartment#1">
+                    <lane hadOnlyOneElement="false" index="0" isChoiceOtherwiseLane="false" entity-id="compartment-lane#2">
+                        <scope name="Processor Chain" type="http://www.mulesoft.org/schema/mule/core/processor-chain" entity-id="Processor Chain#1">
+                            <graphicalData x="0" y="0" width="0" height="0"/>
+                            <properties>
+<property name="auxiliary;index" value="16"/>
+                            </properties>
+                            <compartment entity-id="compartment#2">
+<lane hadOnlyOneElement="false" index="0" isChoiceOtherwiseLane="false" entity-id="compartment-lane#3">
+    <pattern name="VenuName_Variable" type="http://www.mulesoft.org/schema/mule/core/variable-transformer" entity-id="Variable#6">
+        <graphicalData x="1450" y="183" width="121" height="67"/>
+        <properties>
+            <property name="variableName" value="venueName"/>
+            <property name="value" value="#[items[counter-1].venue.name]"/>
+            <property name="org.mule.tooling.ui.modules.core.widgets.meta.ModeAttribute" value="http://www.mulesoft.org/schema/mule/core/set-variable"/>
+            <property name="auxiliary;index" value="17"/>
+        </properties>
+    </pattern>
+    <pattern name="Lat_Variable" type="http://www.mulesoft.org/schema/mule/core/variable-transformer" entity-id="Variable#7">
+        <graphicalData x="1631" y="183" width="79" height="67"/>
+        <properties>
+            <property name="variableName" value="venueLat"/>
+            <property name="value" value="#[items[counter-1].venue.location.lat]"/>
+            <property name="org.mule.tooling.ui.modules.core.widgets.meta.ModeAttribute" value="http://www.mulesoft.org/schema/mule/core/set-variable"/>
+            <property name="auxiliary;index" value="18"/>
+        </properties>
+        <description></description>
+    </pattern>
+    <pattern name="Lng_Variable" type="http://www.mulesoft.org/schema/mule/core/variable-transformer" entity-id="Variable#8">
+        <graphicalData x="1770" y="183" width="83" height="67"/>
+        <properties>
+            <property name="variableName" value="venueLng"/>
+            <property name="value" value="#[items[counter-1].venue.location.lng]"/>
+            <property name="org.mule.tooling.ui.modules.core.widgets.meta.ModeAttribute" value="http://www.mulesoft.org/schema/mule/core/set-variable"/>
+            <property name="auxiliary;index" value="19"/>
+        </properties>
+        <description></description>
+    </pattern>
+    <pattern name="Variable" type="http://www.mulesoft.org/schema/mule/core/variable-transformer" entity-id="Variable#9">
+        <graphicalData x="1913" y="183" width="68" height="67"/>
+        <properties>
+            <property name="updated"/>
+            <property name="variableName" value="venueList"/>
+            <property name="org.mule.tooling.ui.modules.core.widgets.meta.ModeAttribute" value="http://www.mulesoft.org/schema/mule/core/set-variable"/>
+            <property name="value" value="#[venueList + &quot;{\&quot;name\&quot;:&quot; + &quot;\&quot;&quot; + venueName + &quot;\&quot;,\&quot;location\&quot;:{\&quot;lat\&quot;:&quot; + venueLat + &quot;,\&quot;lng\&quot;:&quot; + venueLng + &quot;}&quot;]"/>
+            <property name="auxiliary;index" value="20"/>
+        </properties>
+        <description></description>
+    </pattern>
+    <pattern name="Variable" type="http://www.mulesoft.org/schema/mule/core/variable-transformer" entity-id="71aa03ed-9b34-4b6a-af04-78c4643cd3c7">
+        <graphicalData x="2041" y="183" width="68" height="67"/>
+        <properties>
+            <property name="updated"/>
+            <property name="variableName" value="venueList"/>
+            <property name="org.mule.tooling.ui.modules.core.widgets.meta.ModeAttribute" value="http://www.mulesoft.org/schema/mule/core/set-variable"/>
+            <property name="value" value="#[venueList + &quot;,\&quot;tweets\&quot;:[&quot;]"/>
+        </properties>
+        <description></description>
+    </pattern>
+    <pattern name="Geo_Variable" type="http://www.mulesoft.org/schema/mule/core/variable-transformer" entity-id="Variable#10">
+        <graphicalData x="2169" y="183" width="84" height="67"/>
+        <properties>
+            <property name="variableName" value="geocode"/>
+            <property name="value" value="#[venueLat],#[venueLng]"/>
+            <property name="org.mule.tooling.ui.modules.core.widgets.meta.ModeAttribute" value="http://www.mulesoft.org/schema/mule/core/set-variable"/>
+            <property name="auxiliary;index" value="21"/>
+        </properties>
+    </pattern>
+    <pattern name="Twitter" type="http://www.mulesoft.org/schema/mule/twitter/twitter-connector" entity-id="Twitter#2">
+        <graphicalData x="2313" y="183" width="68" height="67"/>
+        <properties>
+            <property name=""/>
+            <property name="accessKey" value="2359000566-8p66LBzfhuIE1gLmEprFlB9K32VKGTiohrRqN1Q"/>
+            <property name="query" value="&quot;#[venueName]&quot;"/>
+            <property name="locale"/>
+            <property name="accessSecret" value="jCkPhKmL5epFxo7AsTtc0v4I5eplHyIw9SvQyfphXglVT"/>
+            <property name="org.mule.tooling.ui.modules.core.widgets.meta.ModeAttribute" value="http://www.mulesoft.org/schema/mule/twitter/search"/>
+            <property name="since"/>
+            <property name="lang"/>
+            <property name="until"/>
+            <property name="geocode" value="#[geocode]"/>
+            <property name="unit"/>
+            <property name="sinceId"/>
+            <property name="resultType" value="mixed"/>
+            <property name="radius" value="2"/>
+            <property name="config-ref" value="Twitter"/>
+            <property name="auxiliary;index" value="22"/>
+            <property name="maxId"/>
+        </properties>
+    </pattern>
+    <pattern name="Variable" type="http://www.mulesoft.org/schema/mule/core/variable-transformer" entity-id="Variable#11">
+        <graphicalData x="2441" y="183" width="68" height="67"/>
+        <properties>
+            <property name="variableName" value="tweets"/>
+            <property name="value" value="#[message.payload.tweets]"/>
+            <property name="org.mule.tooling.ui.modules.core.widgets.meta.ModeAttribute" value="http://www.mulesoft.org/schema/mule/core/set-variable"/>
+            <property name="auxiliary;index" value="23"/>
+        </properties>
+        <description></description>
+    </pattern>
+    <scope name="For Each" type="http://www.mulesoft.org/schema/mule/core/foreach" entity-id="For Each#2">
+        <graphicalData x="2569" y="159" width="115" height="115"/>
+        <properties>
+            <property name="counterVariableName" value="counter"/>
+            <property name="updated"/>
+            <property name="rootMessageVariableName" value="rootMessage"/>
+            <property name="batchSize" value="1"/>
+            <property name="collection" value="#[tweets]"/>
+            <property name="auxiliary;index" value="24"/>
+        </properties>
+        <description></description>
+        <compartment entity-id="compartment#3">
+            <lane hadOnlyOneElement="false" index="0" isChoiceOtherwiseLane="false" entity-id="compartment-lane#4">
+                <pattern name="Variable" type="http://www.mulesoft.org/schema/mule/core/variable-transformer" entity-id="Variable#12">
+                    <graphicalData x="2583" y="181" width="68" height="67"/>
+                    <properties>
+                        <property name="variableName" value="venueList"/>
+                        <property name="updated"/>
+                        <property name="value" value="#[venueList + &quot;{\&quot;id\&quot;:&quot; + tweets[counter-1].id + &quot;,\&quot;text\&quot;:&quot; + &quot;\&quot;&quot; + tweets[counter-1].text + &quot;\&quot;},&quot;]"/>
+                        <property name="org.mule.tooling.ui.modules.core.widgets.meta.ModeAttribute" value="http://www.mulesoft.org/schema/mule/core/set-variable"/>
+                        <property name="auxiliary;index" value="25"/>
+                    </properties>
+                    <description></description>
+                </pattern>
+                <pattern name="Logger" type="http://www.mulesoft.org/schema/mule/core/logger" entity-id="f28aad40-7bda-4d86-840b-7ab4f3f169f7">
+                    <graphicalData x="0" y="0" width="0" height="0"/>
+                    <properties>
+                        <property name="message" value="foreach=#[venueList]"/>
+                        <property name="category" value=""/>
+                        <property name="level" value="INFO"/>
+                        <property name="updated"/>
+                    </properties>
+                    <description></description>
+                </pattern>
+            </lane>
+        </compartment>
+    </scope>
+    <pattern name="Variable" type="http://www.mulesoft.org/schema/mule/core/variable-transformer" entity-id="c7045d15-6dae-4fe8-b313-ac58e43c0cbe">
+        <graphicalData x="0" y="0" width="0" height="0"/>
+        <properties>
+            <property name="updated"/>
+            <property name="variableName" value="venueList"/>
+            <property name="org.mule.tooling.ui.modules.core.widgets.meta.ModeAttribute" value="http://www.mulesoft.org/schema/mule/core/set-variable"/>
+            <property name="value" value="#[venueList + &quot;{\&quot;id\&quot;:0&quot; + &quot;,\&quot;text\&quot;:\&quot;dummy\&quot;&quot; + &quot;}]&quot;]"/>
+        </properties>
+        <description></description>
+    </pattern>
+    <pattern name="Variable" type="http://www.mulesoft.org/schema/mule/core/variable-transformer" entity-id="Variable#13">
+        <graphicalData x="2744" y="183" width="68" height="67"/>
+        <properties>
+            <property name="updated"/>
+            <property name="variableName" value="venueList"/>
+            <property name="org.mule.tooling.ui.modules.core.widgets.meta.ModeAttribute" value="http://www.mulesoft.org/schema/mule/core/set-variable"/>
+            <property name="value" value="#[venueList + &quot;},&quot;]"/>
+            <property name="auxiliary;index" value="27"/>
+        </properties>
+        <description></description>
+    </pattern>
+    <pattern name="Logger" type="http://www.mulesoft.org/schema/mule/core/logger" entity-id="Logger#3">
+        <graphicalData x="2872" y="183" width="68" height="67"/>
+        <properties>
+            <property name="message" value="Foreachtweet:#[venueList]"/>
+            <property name="category"/>
+            <property name="level" value="INFO"/>
+            <property name="auxiliary;moved-from" value="26"/>
+        </properties>
+        <description></description>
+    </pattern>
+</lane>
+                            </compartment>
+                        </scope>
+                    </lane>
+                </compartment>
+            </scope>
+            <pattern name="Variable" type="http://www.mulesoft.org/schema/mule/core/variable-transformer" entity-id="Variable#14">
+                <graphicalData x="3265" y="168" width="68" height="67"/>
+                <properties>
+                    <property name="updated"/>
+                    <property name="variableName" value="venueList"/>
+                    <property name="org.mule.tooling.ui.modules.core.widgets.meta.ModeAttribute" value="http://www.mulesoft.org/schema/mule/core/set-variable"/>
+                    <property name="value" value="#[venueList + &quot;{\&quot;name\&quot;:\&quot;dummy\&quot;&quot; + &quot;,\&quot;location\&quot;:{\&quot;lat\&quot;:0&quot; + &quot;,\&quot;lng\&quot;:0}}]}&quot;]"/>
+                    <property name="auxiliary;index" value="28"/>
+                </properties>
+                <description></description>
+            </pattern>
+            <pattern name="Logger" type="http://www.mulesoft.org/schema/mule/core/logger" entity-id="Logger#4">
+                <graphicalData x="3393" y="168" width="68" height="67"/>
+                <properties>
+                    <property name="message" value="Venues=#[venueList]"/>
+                    <property name="category"/>
+                    <property name="level" value="INFO"/>
+                    <property name="auxiliary;index" value="29"/>
+                </properties>
+                <description></description>
+            </pattern>
+            <pattern name="Set Payload" type="http://www.mulesoft.org/schema/mule/core/set-payload" entity-id="Set Payload#1">
+                <graphicalData x="3521" y="168" width="75" height="67"/>
+                <properties>
+                    <property name="updated"/>
+                    <property name="value" value="#[venueList]"/>
+                    <property name="auxiliary;index" value="31"/>
+                </properties>
+                <description></description>
+            </pattern>
+            <pattern name="Object to JSON" type="http://www.mulesoft.org/schema/mule/json/object-to-json-transformer" entity-id="434dd922-46a3-4972-904c-f086e2de37d0">
+                <graphicalData x="3656" y="168" width="93" height="67"/>
+                <description></description>
+            </pattern>
+            <pattern name="Echo" type="org.mule.tooling.ui.modules.core.pattern.echo" entity-id="Echo#1">
+                <graphicalData x="3937" y="168" width="68" height="67"/>
+                <properties>
+                    <property name="auxiliary;index" value="33"/>
+                </properties>
+            </pattern>
+        </lane>
+    </flow>
+</mule-configuration>

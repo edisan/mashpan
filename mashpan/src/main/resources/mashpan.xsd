@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.example.org/mashpan" xmlns:tns="http://www.example.org/mashpan" elementFormDefault="qualified">
+
+    <complexType name="Venue">
+    	<sequence>
+    		<element name="name" type="string"></element>
+    		<element name="location" type="tns:LatLng"></element>
+    		<element name="tweets" type="tns:Tweet" maxOccurs="unbounded" minOccurs="0"></element>
+    	</sequence>
+    </complexType>
+
+    <complexType name="LatLng">
+    	<sequence>
+    		<element name="lat" type="double"></element>
+    		<element name="lng" type="double"></element>
+    	</sequence>
+    </complexType>
+
+    <complexType name="Tweet">
+    	<sequence>
+    		<element name="tweetId" type="string"></element>
+    		<element name="text" type="string"></element>
+    		<element name="location" type="tns:LatLng"></element>
+    	</sequence>
+    </complexType>
+
+    <complexType name="Trend">
+    	<sequence>
+            <element name="searchCriteria" type="string"></element>
+            <element name="venues" type="tns:Venue"
+    			maxOccurs="unbounded" minOccurs="0">
+    		</element>
+    	</sequence>
+    </complexType>
+
+    <element name="trends" type="tns:Trend"></element>
+
+</schema>

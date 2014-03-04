@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<mule-configuration xmlns="http://www.mulesoft.com/tooling/messageflow" name="twitter">
+    <global-element name="Twitter" type="http://www.mulesoft.org/schema/mule/twitter/config" entity-id="Twitter#1">
+        <properties>
+            <property name="proxyUsername"/>
+            <property name="accessKey" value="2359000566-8p66LBzfhuIE1gLmEprFlB9K32VKGTiohrRqN1Q"/>
+            <property name="consumerKey" value="Fz6P0e9m6qQaOOnvUFOpiQ"/>
+            <property name="useSSL"/>
+            <property name="proxyHost"/>
+            <property name="name" value="Twitter"/>
+            <property name="accessSecret" value="jCkPhKmL5epFxo7AsTtc0v4I5eplHyIw9SvQyfphXglVT"/>
+            <property name="proxyPort"/>
+            <property name="consumerSecret" value="hZx7UEOLCD8jtG1lCrXd6qBaCqWexgiANzqovvAvKdI"/>
+            <property name="proxyPassword"/>
+            <property name="auxiliary;index" value="1"/>
+            <property-collection name="@http://www.mulesoft.org/schema/mule/twitter/connection-pooling-profile;0">
+                <property name="exhaustedAction" value="WHEN_EXHAUSTED_GROW"/>
+                <property name="isProcessed$$$$ " value="true"/>
+                <property name="auxiliary;wrapIn" value="2"/>
+                <property name="auxiliary;index" value="2"/>
+                <property name="initialisationPolicy" value="INITIALISE_ONE"/>
+            </property-collection>
+        </properties>
+    </global-element>
+    <global-element name="Ajax" type="org.mule.tooling.ui.modules.core.global.ajaxConnector" entity-id="Ajax#1">
+        <properties>
+            <property name="maxInterval"/>
+            <property name="jsonCommented" value="true"/>
+            <property name="interval"/>
+            <property name="logLevel"/>
+            <property name="name" value="Ajax"/>
+            <property name="refsThreshold"/>
+            <property name="disableReplyTo"/>
+            <property name="resourceBase" value="docroot"/>
+            <property name="multiFrameInterval"/>
+            <property name="serverUrl" value="http://127.0.0.1:8090/twitter"/>
+            <property name="timeout"/>
+            <property name="auxiliary;index" value="3"/>
+        </properties>
+    </global-element>
+    <flow SubFlow="false" name="twitterFlow1" type="http://www.mulesoft.org/schema/mule/core/flow" entity-id="ea20a035-d7d6-493c-987b-a726d3f1a44a">
+        <properties>
+            <property name="processingStrategy2" value=""/>
+            <property name="initialState" value=""/>
+            <property name="auxiliary;erased;initialState" value="true"/>
+            <property name="bussinessEventsLabel" value=""/>
+            <property name="tracking:enable-default-events" value="false"/>
+            <property name="auxiliary;erased;processingStrategy2" value="true"/>
+            <property name="auxiliary;index" value="4"/>
+            <property name="updated"/>
+            <property-collection name="@http://www.mulesoft.org/schema/mule/ee/tracking/transaction;1610644915">
+                <property name="id" value=""/>
+                <property name="isProcessed$$$$ " value="true"/>
+            </property-collection>
+        </properties>
+        <description></description>
+        <lane hadOnlyOneElement="false" index="0" isChoiceOtherwiseLane="false" entity-id="compartment-lane#1">
+            <graphicalData x="0" y="0" width="0" height="0"/>
+            <endpoint direction="Inbound" message-exchange-pattern="OneWay" name="Ajax" type="org.mule.tooling.ui.modules.core.ajax.AJAX" entity-id="Ajax#2">
+                <graphicalData x="21" y="104" width="68" height="67"/>
+                <properties>
+                    <property name="businessEventsLabel"/>
+                    <property name="messageCacheSize"/>
+                    <property name="disableTransportTransformer"/>
+                    <property name="exchange-pattern" value="one-way"/>
+                    <property name="tracking:enable-default-events"/>
+                    <property name="ref"/>
+                    <property name="transformer-refs"/>
+                    <property name="cacheMessages"/>
+                    <property name="address"/>
+                    <property name="encoding"/>
+                    <property name="channel" value="/services/tweet"/>
+                    <property name="mimeType"/>
+                    <property name="auxiliary;index" value="5"/>
+                    <property name="responseTimeout" value="10000"/>
+                    <property name="connector-ref" value="Ajax"/>
+                </properties>
+            </endpoint>
+            <pattern name="Variable" type="http://www.mulesoft.org/schema/mule/core/variable-transformer" entity-id="Variable#1">
+                <graphicalData x="149" y="104" width="68" height="67"/>
+                <properties>
+                    <property name="variableName" value="lng"/>
+                    <property name="org.mule.tooling.ui.modules.core.widgets.meta.ModeAttribute" value="http://www.mulesoft.org/schema/mule/core/set-variable"/>
+                    <property name="value" value="#[message.payload['lng']]"/>
+                    <property name="auxiliary;index" value="6"/>
+                </properties>
+            </pattern>
+            <pattern name="Variable" type="http://www.mulesoft.org/schema/mule/core/variable-transformer" entity-id="Variable#2">
+                <graphicalData x="277" y="104" width="68" height="67"/>
+                <properties>
+                    <property name="variableName" value="lat"/>
+                    <property name="org.mule.tooling.ui.modules.core.widgets.meta.ModeAttribute" value="http://www.mulesoft.org/schema/mule/core/set-variable"/>
+                    <property name="value" value="#[message.payload['lat']]"/>
+                    <property name="auxiliary;index" value="7"/>
+                </properties>
+            </pattern>
+            <pattern name="Variable" type="http://www.mulesoft.org/schema/mule/core/variable-transformer" entity-id="Variable#3">
+                <graphicalData x="405" y="104" width="68" height="67"/>
+                <properties>
+                    <property name="variableName" value="phrase"/>
+                    <property name="org.mule.tooling.ui.modules.core.widgets.meta.ModeAttribute" value="http://www.mulesoft.org/schema/mule/core/set-variable"/>
+                    <property name="value" value="#[message.payload['phrase']]"/>
+                    <property name="auxiliary;index" value="8"/>
+                </properties>
+            </pattern>
+            <pattern name="Logger" type="http://www.mulesoft.org/schema/mule/core/logger" entity-id="Logger#1">
+                <graphicalData x="533" y="104" width="68" height="67"/>
+                <properties>
+                    <property name="message" value="latitude=#[lat], longitude=#[lng], phrase=#[phrase]"/>
+                    <property name="category"/>
+                    <property name="level" value="INFO"/>
+                    <property name="auxiliary;index" value="9"/>
+                </properties>
+            </pattern>
+            <pattern name="Variable" type="http://www.mulesoft.org/schema/mule/core/variable-transformer" entity-id="Variable#4">
+                <graphicalData x="661" y="104" width="68" height="67"/>
+                <properties>
+                    <property name="variableName" value="geocode"/>
+                    <property name="org.mule.tooling.ui.modules.core.widgets.meta.ModeAttribute" value="http://www.mulesoft.org/schema/mule/core/set-variable"/>
+                    <property name="value" value="#[lat],#[lng]"/>
+                    <property name="auxiliary;index" value="10"/>
+                </properties>
+            </pattern>
+            <pattern name="Twitter" type="http://www.mulesoft.org/schema/mule/twitter/twitter-connector" entity-id="Twitter#2">
+                <graphicalData x="789" y="104" width="68" height="67"/>
+                <properties>
+                    <property name=""/>
+                    <property name="accessKey" value="2359000566-8p66LBzfhuIE1gLmEprFlB9K32VKGTiohrRqN1Q"/>
+                    <property name="query" value="#[phrase]"/>
+                    <property name="locale"/>
+                    <property name="accessSecret" value="jCkPhKmL5epFxo7AsTtc0v4I5eplHyIw9SvQyfphXglVT"/>
+                    <property name="org.mule.tooling.ui.modules.core.widgets.meta.ModeAttribute" value="http://www.mulesoft.org/schema/mule/twitter/search"/>
+                    <property name="since"/>
+                    <property name="lang"/>
+                    <property name="until"/>
+                    <property name="geocode" value="#[geocode]"/>
+                    <property name="unit"/>
+                    <property name="sinceId"/>
+                    <property name="resultType" value="mixed"/>
+                    <property name="radius" value="1"/>
+                    <property name="config-ref" value="Twitter"/>
+                    <property name="auxiliary;index" value="11"/>
+                    <property name="maxId"/>
+                </properties>
+            </pattern>
+            <pattern name="Object to JSON" type="http://www.mulesoft.org/schema/mule/json/object-to-json-transformer" entity-id="f8e2ff7f-78e0-4539-bda3-225adc855f41">
+                <graphicalData x="0" y="0" width="0" height="0"/>
+            </pattern>
+            <pattern name="Echo" type="org.mule.tooling.ui.modules.core.pattern.echo" entity-id="Echo#1">
+                <graphicalData x="917" y="104" width="68" height="67"/>
+                <properties>
+                    <property name="auxiliary;index" value="12"/>
+                </properties>
+            </pattern>
+        </lane>
+    </flow>
+</mule-configuration>
